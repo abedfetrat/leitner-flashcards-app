@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -25,9 +26,15 @@ public class MyViewPagerAdapter extends PagerAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.pager_item, container, false);
 
-        TextView tv = layout.findViewById(R.id.textView);
-        tv.setText(data.get(position));
+        LinearLayout back = layout.findViewById(R.id.back);
+        back.setTag(position);
 
+        TextView tvFront = layout.findViewById(R.id.textView);
+        tvFront.setText(data.get(position));
+        /*
+        TextView tvBack = layout.findViewById(R.id.textView2);
+        tvBack.setText(data.get(position));
+        */
         container.addView(layout);
         return layout;
     }
@@ -46,4 +53,5 @@ public class MyViewPagerAdapter extends PagerAdapter {
     public int getCount() {
         return data.size();
     }
+
 }

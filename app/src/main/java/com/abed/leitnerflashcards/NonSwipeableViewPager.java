@@ -7,13 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-public class ViewPagerWithoutSwipe extends ViewPager {
+public class NonSwipeableViewPager extends ViewPager {
 
-    public ViewPagerWithoutSwipe(@NonNull Context context) {
+    public NonSwipeableViewPager(@NonNull Context context) {
         super(context);
     }
 
-    public ViewPagerWithoutSwipe(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public NonSwipeableViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
