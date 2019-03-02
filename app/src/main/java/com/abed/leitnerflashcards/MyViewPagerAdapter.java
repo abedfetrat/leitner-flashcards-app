@@ -29,6 +29,10 @@ public class MyViewPagerAdapter extends PagerAdapter {
         LinearLayout back = layout.findViewById(R.id.back);
         back.setTag(position);
 
+        TextView tvIndex = layout.findViewById(R.id.tvIndex);
+        String index = position + 1 + " / " + data.size();
+        tvIndex.setText(index);
+
         TextView tvFront = layout.findViewById(R.id.textView);
         tvFront.setText(data.get(position));
         /*
