@@ -1,12 +1,13 @@
 package com.abed.leitnerflashcards;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -26,19 +27,31 @@ public class MyViewPagerAdapter extends PagerAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.pager_item, container, false);
 
-        LinearLayout back = layout.findViewById(R.id.back);
-        back.setTag(position);
-
         TextView tvIndex = layout.findViewById(R.id.tvIndex);
         String index = position + 1 + " / " + data.size();
         tvIndex.setText(index);
 
-        TextView tvFront = layout.findViewById(R.id.textView);
-        tvFront.setText(data.get(position));
         /*
-        TextView tvBack = layout.findViewById(R.id.textView2);
-        tvBack.setText(data.get(position));
+        if (data.get(position).getImagePath != null) {
+            ImageView imv = layout.findViewById(R.id.imageView);
+            imv.setVisibility(View.VISIBLE);
+            // Get and set image
+        }
         */
+
+        TextView tvFrontText = layout.findViewById(R.id.tvFrontText);
+        tvFrontText.setText(data.get(position));
+        tvFrontText.setOnClickListener((View v) -> {
+            // play audio
+        });
+
+        TextView tvBackText = layout.findViewById(R.id.tvBackText);
+        // tvBackText.setText(data.get(position));
+        tvBackText.setTag(position);
+        tvBackText.setOnClickListener((View v) -> {
+            // play audio
+        });
+
         container.addView(layout);
         return layout;
     }
@@ -57,5 +70,4 @@ public class MyViewPagerAdapter extends PagerAdapter {
     public int getCount() {
         return data.size();
     }
-
 }
