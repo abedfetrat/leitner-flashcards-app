@@ -21,15 +21,18 @@ public class AddActivity extends AppCompatActivity {
     private String pickedFrontAudioUri;
     private String pickedBackAudioUri;
 
+    private EditText etFrontText;
+    private EditText etBackText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
         Button btnPickImage = findViewById(R.id.btnImage);
-        EditText etFrontText = findViewById(R.id.etText1);
+        etFrontText = findViewById(R.id.etText1);
         Button btnPickFrontAudio = findViewById(R.id.btnAudio1);
-        EditText etBackText = findViewById(R.id.etText2);
+        etBackText = findViewById(R.id.etText2);
         Button btnPickBackAudio = findViewById(R.id.btnAudio2);
 
         btnPickImage.setOnClickListener((View v) -> {
@@ -55,10 +58,9 @@ public class AddActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            // save logic
+            save();
             finish();
         }
-
         return true;
     }
 
@@ -85,5 +87,34 @@ public class AddActivity extends AppCompatActivity {
         intent.setType(type);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, title), reqCode);
+    }
+
+    private void save() {
+        String imageFilePath = null;
+        String frontAudioFilePath = null;
+        String backAudioFilePath = null;
+
+        if (pickedImageUri != null) {
+            // save picked image to storage
+            // set imageFilePath
+        }
+
+        if (pickedFrontAudioUri != null) {
+            // save audio to storage
+            // set frontAudioFilePath
+        }
+
+        if (pickedBackAudioUri != null) {
+            // save audio to storage
+            // set backAudioFilePath
+        }
+
+        // create card object
+        String frontText = etFrontText.getText().toString();
+        String backText = etBackText.getText().toString();
+        //Card card = new Card(imageFilePath, frontText, frontAudioFilePath, backText, backAudioFilePath);
+
+        // save card to database
+        // Repository.getInstance().insertCard(card);
     }
 }
