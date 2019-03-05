@@ -6,22 +6,25 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Dao
 public interface CardDao {
 
     @Query("SELECT * FROM cards ORDER BY id DESC")
-    public CardEntity[] getAll();
+    public List<Card> getAll();
 
     @Query("SELECT * FROM cards WHERE dueDate = :nowDate ORDER BY level DESC")
-    public CardEntity[] getDue(String nowDate);
+    public List<Card> getDue(LocalDate nowDate);
 
     @Insert
-    public void insert(CardEntity card);
+    public void insert(Card card);
 
     @Update
-    public void update(CardEntity card);
+    public void update(Card card);
 
     @Delete
-    public void delete(CardEntity card);
+    public void delete(Card card);
 
 }

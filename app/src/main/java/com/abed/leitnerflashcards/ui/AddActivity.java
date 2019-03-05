@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.abed.leitnerflashcards.R;
+import com.abed.leitnerflashcards.data.Repository;
 import com.abed.leitnerflashcards.ui.MainActivity;
 
 public class AddActivity extends AppCompatActivity {

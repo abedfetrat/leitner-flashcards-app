@@ -1,28 +1,42 @@
 package com.abed.leitnerflashcards.data;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.time.LocalDate;
 
+@Entity(tableName = "cards")
 public class Card {
-    // Todo: Use something else than LocalDate
     private static final int LEVEL_1 = 1;
     private static final int LEVEL_2 = 2;
     private static final int LEVEL_3 = 3;
     private static final int LEVEL_4 = 4;
     private static final int LEVEL_5 = 5;
 
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private int level;
-    private LocalDate dueDate;
+    private LocalDate dueDate; // Todo: Use something else than LocalDate
     private String imageFilePath;
     private String frontText;
     private String frontAudiFilePath;
     private String backText;
     private String backAudioFilePath;
 
-    public Card(int id, String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
+    public Card(String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
         level = 1;
         dueDate = LocalDate.now();
+        this.imageFilePath = imageFilePath;
+        this.frontText = frontText;
+        this.frontAudiFilePath = frontAudiFilePath;
+        this.backText = backText;
+        this.backAudioFilePath = backAudioFilePath;
+    }
+
+    public Card(int id, int level, LocalDate dueDate, String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
         this.id = id;
+        this.level = level;
+        this.dueDate = dueDate;
         this.imageFilePath = imageFilePath;
         this.frontText = frontText;
         this.frontAudiFilePath = frontAudiFilePath;
@@ -34,12 +48,24 @@ public class Card {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getLevel() {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public LocalDate getDueDate() {
         return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     public String getImageFilePath() {
