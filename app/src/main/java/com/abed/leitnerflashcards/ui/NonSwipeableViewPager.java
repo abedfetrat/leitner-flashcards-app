@@ -1,4 +1,4 @@
-package com.abed.leitnerflashcards;
+package com.abed.leitnerflashcards.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

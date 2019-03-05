@@ -1,9 +1,7 @@
-package com.abed.leitnerflashcards;
+package com.abed.leitnerflashcards.ui;
 
 import android.content.Intent;
-import android.os.Debug;
 import android.support.constraint.Group;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.abed.leitnerflashcards.R;
+
 import java.util.Arrays;
 import java.util.List;
 

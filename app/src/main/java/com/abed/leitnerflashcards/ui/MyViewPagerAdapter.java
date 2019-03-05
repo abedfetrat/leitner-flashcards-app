@@ -1,4 +1,4 @@
-package com.abed.leitnerflashcards;
+package com.abed.leitnerflashcards.ui;
 
 import android.content.Context;
 import android.media.Image;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.abed.leitnerflashcards.R;
 
 import java.util.List;
 
