@@ -1,5 +1,6 @@
 package com.abed.leitnerflashcards;
 
+import android.content.Intent;
 import android.os.Debug;
 import android.support.constraint.Group;
 import android.support.v4.view.ViewPager;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add:
+                startActivity(new Intent(this, AddActivity.class));
                 break;
             case R.id.delete:
                 break;
