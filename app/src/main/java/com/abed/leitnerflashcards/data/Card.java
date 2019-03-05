@@ -10,7 +10,7 @@ public class Card {
     private static final int LEVEL_4 = 4;
     private static final int LEVEL_5 = 5;
 
-    // id
+    private int id;
     private int level;
     private LocalDate dueDate;
     private String imageFilePath;
@@ -19,14 +19,19 @@ public class Card {
     private String backText;
     private String backAudioFilePath;
 
-    public Card(String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
+    public Card(int id, String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
         level = 1;
         dueDate = LocalDate.now();
+        this.id = id;
         this.imageFilePath = imageFilePath;
         this.frontText = frontText;
         this.frontAudiFilePath = frontAudiFilePath;
         this.backText = backText;
         this.backAudioFilePath = backAudioFilePath;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getLevel() {
