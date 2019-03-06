@@ -92,4 +92,8 @@ public class MyViewPagerAdapter extends PagerAdapter {
         data.clear();
         notifyDataSetChanged();
     }
+
+    public Card getCard(int pos) {
+        return data.get(pos);
+    }
 }

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.i(TAG, "OnCreate");
         pager = findViewById(R.id.viewPager);
         btnShow = findViewById(R.id.btnShow);
         actionButtons = findViewById(R.id.actionButtons);
@@ -55,7 +55,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnCorrect).setOnClickListener((View v) -> {
             // Level up card
             int pos = pager.getCurrentItem();
-            //Log.i(TAG, "item position: " + pos + "item: " + data.get(pos));
+            Card card = adapter.getCard(pos);
+
+            Log.i(TAG, "Card info: id: " + card.getId() + " level: " + card.getLevel() + " dueDate: " + card.getDueDate());
+
+            card.levelUp();
+            Repository.getInstance(getApplication()).updateCard(card);
             // then
             showNextPage();
         });
@@ -63,10 +68,21 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnWrong).setOnClickListener((View v) -> {
             // Level down card
             int pos = pager.getCurrentItem();
-            //Log.i(TAG, "item position: " + pos + "item: " + data.get(pos));
+            Card card = adapter.getCard(pos);
+
+            Log.i(TAG, "Card info: id: " + card.getId() + " level: " + card.getLevel() + " dueDate: " + card.getDueDate());
+
+            card.levelDown();
+            Repository.getInstance(getApplication()).updateCard(card);
             // then
             showNextPage();
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
     }
 
     @Override
