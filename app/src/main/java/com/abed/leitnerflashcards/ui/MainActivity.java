@@ -1,11 +1,9 @@
 package com.abed.leitnerflashcards.ui;
 
-import android.arch.lifecycle.Observer;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
 import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +16,11 @@ import com.abed.leitnerflashcards.data.Card;
 import com.abed.leitnerflashcards.data.Repository;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private MyViewPagerAdapter adapter;
     private NonSwipeableViewPager pager;
     private Group actionButtons;
     private Button btnShow;
@@ -38,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
         actionButtons = findViewById(R.id.actionButtons);
         tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
 
-        List<String> data = Arrays.asList("one", "two", "three", "four", "five"); //new ArrayList<>();
-        hideEmptyState();
+        adapter = new MyViewPagerAdapter(this);
+        pager.setAdapter(adapter);
 
         Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).observe(this, (List<Card> cards) -> {
-
+            if (cards != null && !cards.isEmpty()) {
+                hideEmptyState();
+                adapter.setData(cards);
+            }
         });
-
-        MyViewPagerAdapter adapter = new MyViewPagerAdapter(this, data);
-        pager.setAdapter(adapter);
 
         btnShow.setOnClickListener((View v) -> {
             pager.findViewWithTag(pager.getCurrentItem()).setVisibility(View.VISIBLE); // show card back text
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnCorrect).setOnClickListener((View v) -> {
             // Level up card
             int pos = pager.getCurrentItem();
-            Log.i(TAG, "item position: " + pos + "item: " + data.get(pos));
+            //Log.i(TAG, "item position: " + pos + "item: " + data.get(pos));
             // then
             showNextPage();
         });
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnWrong).setOnClickListener((View v) -> {
             // Level down card
             int pos = pager.getCurrentItem();
-            Log.i(TAG, "item position: " + pos + "item: " + data.get(pos));
+            //Log.i(TAG, "item position: " + pos + "item: " + data.get(pos));
             // then
             showNextPage();
         });
@@ -100,8 +98,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNextPage() {
-        int last = pager.getChildCount() + 1;
+        //int last = pager.getChildCount() + 1;
+        int last = adapter.getCount() - 1;
         int next = pager.getCurrentItem() + 1;
+        Log.i(TAG, "next: " + next + " last: " + last);
         if (!(next > last)) {
             pager.setCurrentItem(next);
             actionButtons.setVisibility(View.GONE);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             actionButtons.setVisibility(View.GONE);
             btnShow.setVisibility(View.GONE);
-            pager.setAdapter(null);
+            adapter.clearData();
             showEmptyState();
         }
     }
