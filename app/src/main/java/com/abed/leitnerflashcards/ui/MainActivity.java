@@ -1,6 +1,8 @@
 package com.abed.leitnerflashcards.ui;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.abed.leitnerflashcards.R;
+import com.abed.leitnerflashcards.data.Card;
+import com.abed.leitnerflashcards.data.Repository;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         List<String> data = Arrays.asList("one", "two", "three", "four", "five"); //new ArrayList<>();
         hideEmptyState();
+
+        Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).observe(this, (List<Card> cards) -> {
+
+        });
 
         MyViewPagerAdapter adapter = new MyViewPagerAdapter(this, data);
         pager.setAdapter(adapter);

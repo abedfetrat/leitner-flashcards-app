@@ -1,5 +1,6 @@
 package com.abed.leitnerflashcards.data;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
 import java.time.LocalDate;
@@ -13,6 +14,9 @@ public class Repository {
     private Executor executor;
     private CardDao dao;
 
+    private LiveData<List<Card>> allCards;
+    private LiveData<List<Card>> dueCards;
+
     public static Repository getInstance(final Context context) {
         if (INSTANCE == null) {
             INSTANCE = new Repository(context);
@@ -25,12 +29,16 @@ public class Repository {
         dao = AppDatabase.getDatabase(context).cardDao();
     }
 
-    public List<Card> getAllCards() {
-        return dao.getAll();
+    public LiveData<List<Card>> getAllCards() {
+        if (allCards == null)
+            allCards = dao.getAll();
+        return allCards;
     }
 
-    public List<Card> getDueCards(LocalDate nowDate) {
-        return dao.getDue(nowDate);
+    public LiveData<List<Card>> getDueCards(LocalDate nowDate) {
+        if (dueCards == null)
+            dueCards = dao.getDue(nowDate);
+        return dueCards;
     }
 
     public void insertCard(Card card) {
