@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG, "OnCreate");
+
         pager = findViewById(R.id.viewPager);
         btnShow = findViewById(R.id.btnShow);
         actionButtons = findViewById(R.id.actionButtons);
@@ -38,13 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new MyViewPagerAdapter(this);
         pager.setAdapter(adapter);
-
-        Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).observe(this, (List<Card> cards) -> {
-            if (cards != null && !cards.isEmpty()) {
-                hideEmptyState();
-                adapter.setData(cards);
-            }
-        });
 
         btnShow.setOnClickListener((View v) -> {
             pager.findViewWithTag(pager.getCurrentItem()).setVisibility(View.VISIBLE); // show card back text
@@ -83,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+        Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).addOnSuccessListener((List<Card> cards) -> {
+            if (cards != null && !cards.isEmpty()) {
+                hideEmptyState();
+                adapter.setData(cards);
+            }
+        });
     }
 
     @Override

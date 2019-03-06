@@ -1,7 +1,7 @@
 package com.abed.leitnerflashcards.data;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,9 +13,6 @@ public class Repository {
 
     private Executor executor;
     private CardDao dao;
-
-    private LiveData<List<Card>> allCards;
-    private LiveData<List<Card>> dueCards;
 
     public static Repository getInstance(final Context context) {
         if (INSTANCE == null) {
@@ -29,16 +26,16 @@ public class Repository {
         dao = AppDatabase.getDatabase(context).cardDao();
     }
 
-    public LiveData<List<Card>> getAllCards() {
-        if (allCards == null)
-            allCards = dao.getAll();
-        return allCards;
+    public GetAllCardsTask getAllCards() {
+        GetAllCardsTask task = new GetAllCardsTask(dao);
+        task.execute();
+        return task;
     }
 
-    public LiveData<List<Card>> getDueCards(LocalDate nowDate) {
-        if (dueCards == null)
-            dueCards = dao.getDue(nowDate);
-        return dueCards;
+    public GetDueCardsTask getDueCards(LocalDate nowDate) {
+        GetDueCardsTask task = new GetDueCardsTask(dao);
+        task.execute(nowDate);
+        return task;
     }
 
     public void insertCard(Card card) {
@@ -51,5 +48,59 @@ public class Repository {
 
     public void deleteCard(Card card) {
         executor.execute(() -> dao.delete(card));
+    }
+
+    public static class GetAllCardsTask extends AsyncTask<Void, Void, List<Card>> {
+        private OnSuccessListener<List<Card>> listener;
+        private CardDao dao;
+        GetAllCardsTask (CardDao d) {
+            dao = d;
+        }
+
+        @Override
+        protected List<Card> doInBackground(Void... Void) {
+            return dao.getAll();
+        }
+
+        @Override
+        protected void onPostExecute(List<Card> cards) {
+            super.onPostExecute(cards);
+            if (listener != null)
+                listener.onSuccess(cards);
+        }
+
+        public void addOnSuccessListener(OnSuccessListener<List<Card>> listener) {
+            this.listener = listener;
+        }
+
+    }
+
+    public static class GetDueCardsTask extends AsyncTask<LocalDate, Void, List<Card>> {
+        private OnSuccessListener<List<Card>> listener;
+        private CardDao dao;
+        GetDueCardsTask (CardDao d) {
+            dao = d;
+        }
+
+        @Override
+        protected List<Card> doInBackground(LocalDate... nowDate) {
+            return dao.getDue(nowDate[0]);
+        }
+
+        @Override
+        protected void onPostExecute(List<Card> cards) {
+            super.onPostExecute(cards);
+            if (listener != null)
+                listener.onSuccess(cards);
+        }
+
+        public void addOnSuccessListener(OnSuccessListener<List<Card>> listener) {
+            this.listener = listener;
+        }
+
+    }
+
+    public interface OnSuccessListener<T> {
+        void onSuccess(T t);
     }
 }
