@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.abed.leitnerflashcards.R;
+import com.abed.leitnerflashcards.data.Card;
 import com.abed.leitnerflashcards.data.Repository;
 import com.abed.leitnerflashcards.ui.MainActivity;
 
@@ -115,9 +116,9 @@ public class AddActivity extends AppCompatActivity {
         // create card object
         String frontText = etFrontText.getText().toString();
         String backText = etBackText.getText().toString();
-        //Card card = new Card(imageFilePath, frontText, frontAudioFilePath, backText, backAudioFilePath);
+        Card card = new Card(imageFilePath, frontText, frontAudioFilePath, backText, backAudioFilePath);
 
         // save card to database
-        // Repository.getInstance().insertCard(card);
+        Repository.getInstance(getApplication()).insertCard(card);
     }
 }
