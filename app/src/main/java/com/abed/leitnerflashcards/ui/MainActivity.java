@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Card info: id: " + card.getId() + " level: " + card.getLevel() + " dueDate: " + card.getDueDate());
 
             card.levelDown();
+            if (card.getDueDate().equals(LocalDate.now())) {
+                System.out.println("due date is today");
+            }
             Repository.getInstance(getApplication()).updateCard(card);
             // then
             showNextPage();
