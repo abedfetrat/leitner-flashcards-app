@@ -1,5 +1,6 @@
 package com.abed.leitnerflashcards.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.Group;
@@ -79,12 +80,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).addOnSuccessListener((List<Card> cards) -> {
-            if (cards != null && !cards.isEmpty()) {
-                hideEmptyState();
-                adapter.setData(cards);
-            }
-        });
+        getDueCards();
     }
 
     @Override
@@ -105,6 +101,22 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Todo: Remove asynctask listeners
+    }
+
+    private void getDueCards() {
+        Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).addOnSuccessListener((List<Card> cards) -> {
+            if (cards != null && !cards.isEmpty()) {
+                hideEmptyState();
+                adapter.setData(cards);
+                pager.setCurrentItem(0);
+            }
+        });
+    }
+
     private void showEmptyState() {
         tvEmptyMessage.setVisibility(View.VISIBLE);
         btnShow.setVisibility(View.GONE);
@@ -117,18 +129,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void showNextPage() {
         //int last = pager.getChildCount() + 1;
-        int last = adapter.getCount() - 1;
-        int next = pager.getCurrentItem() + 1;
-        Log.i(TAG, "next: " + next + " last: " + last);
-        if (!(next > last)) {
-            pager.setCurrentItem(next);
+        int lastIndex = adapter.getCount() - 1;
+        int nexIndex = pager.getCurrentItem() + 1;
+        Log.i(TAG, "next: " + nexIndex + " last: " + lastIndex);
+        if (nexIndex <= lastIndex) {
+            pager.setCurrentItem(nexIndex);
             actionButtons.setVisibility(View.GONE);
             btnShow.setVisibility(View.VISIBLE);
         } else {
             actionButtons.setVisibility(View.GONE);
             btnShow.setVisibility(View.GONE);
             adapter.clearData();
-            showEmptyState();
+            //showEmptyState();
+            recreate();
         }
     }
 }

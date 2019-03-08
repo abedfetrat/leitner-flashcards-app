@@ -15,7 +15,7 @@ public interface CardDao {
     @Query("SELECT * FROM cards ORDER BY id DESC")
     public List<Card> getAll();
 
-    @Query("SELECT * FROM cards WHERE dueDate <= :nowDate ORDER BY level DESC")
+    @Query("SELECT * FROM cards WHERE dueDate = :nowDate ORDER BY level DESC")
     public List<Card> getDue(LocalDate nowDate);
 
     @Insert
