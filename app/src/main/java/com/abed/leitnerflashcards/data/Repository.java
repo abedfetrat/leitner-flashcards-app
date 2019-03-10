@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -32,7 +33,7 @@ public class Repository {
         return task;
     }
 
-    public GetDueCardsTask getDueCards(LocalDate nowDate) {
+    public GetDueCardsTask getDueCards(Calendar nowDate) {
         GetDueCardsTask task = new GetDueCardsTask(dao);
         task.execute(nowDate);
         return task;
@@ -75,7 +76,7 @@ public class Repository {
 
     }
 
-    public static class GetDueCardsTask extends AsyncTask<LocalDate, Void, List<Card>> {
+    public static class GetDueCardsTask extends AsyncTask<Calendar, Void, List<Card>> {
         private OnSuccessListener<List<Card>> listener;
         private CardDao dao;
         GetDueCardsTask (CardDao d) {
@@ -83,7 +84,7 @@ public class Repository {
         }
 
         @Override
-        protected List<Card> doInBackground(LocalDate... nowDate) {
+        protected List<Card> doInBackground(Calendar... nowDate) {
             return dao.getDue(nowDate[0]);
         }
 

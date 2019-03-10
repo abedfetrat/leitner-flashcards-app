@@ -1,31 +1,24 @@
 package com.abed.leitnerflashcards.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.abed.leitnerflashcards.R;
 import com.abed.leitnerflashcards.data.Card;
+import com.abed.leitnerflashcards.data.DateUtil;
 import com.abed.leitnerflashcards.data.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnRequestNextPageListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private MyViewPagerAdapter adapter;
     private NonSwipeableViewPager pager;
-    private Group actionButtons;
-    private Button btnShow;
-    private TextView tvEmptyMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,53 +26,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         pager = findViewById(R.id.viewPager);
-        btnShow = findViewById(R.id.btnShow);
-        actionButtons = findViewById(R.id.actionButtons);
-        tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
-
         adapter = new MyViewPagerAdapter(this);
         pager.setAdapter(adapter);
-
-        btnShow.setOnClickListener((View v) -> {
-            pager.findViewWithTag(pager.getCurrentItem()).setVisibility(View.VISIBLE); // show card back text
-            btnShow.setVisibility(View.GONE);
-            actionButtons.setVisibility(View.VISIBLE);
-        });
-
-        findViewById(R.id.btnCorrect).setOnClickListener((View v) -> {
-            // Level up card
-            int pos = pager.getCurrentItem();
-            Card card = adapter.getCard(pos);
-
-            Log.i(TAG, "Card info: id: " + card.getId() + " level: " + card.getLevel() + " dueDate: " + card.getDueDate());
-
-            card.levelUp();
-            Repository.getInstance(getApplication()).updateCard(card);
-            // then
-            showNextPage();
-        });
-
-        findViewById(R.id.btnWrong).setOnClickListener((View v) -> {
-            // Level down card
-            int pos = pager.getCurrentItem();
-            Card card = adapter.getCard(pos);
-
-            Log.i(TAG, "Card info: id: " + card.getId() + " level: " + card.getLevel() + " dueDate: " + card.getDueDate());
-
-            card.levelDown();
-            if (card.getDueDate().equals(LocalDate.now())) {
-                System.out.println("due date is today");
-            }
-            Repository.getInstance(getApplication()).updateCard(card);
-            // then
-            showNextPage();
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
         getDueCards();
     }
 
@@ -104,43 +57,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Todo: Remove asynctask listeners
+        // Todo: Remove asynctask listener
     }
 
     private void getDueCards() {
-        Repository.getInstance(getApplication()).getDueCards(LocalDate.now()).addOnSuccessListener((List<Card> cards) -> {
+        Repository.getInstance(getApplication()).getDueCards(DateUtil.getCalendarWithoutTime()).addOnSuccessListener((List<Card> cards) -> {
             if (cards != null && !cards.isEmpty()) {
-                hideEmptyState();
-                adapter.setData(cards);
-                pager.setCurrentItem(0);
+                adapter.setCards(cards);
             }
         });
     }
 
-    private void showEmptyState() {
-        tvEmptyMessage.setVisibility(View.VISIBLE);
-        btnShow.setVisibility(View.GONE);
-    }
-
-    private void hideEmptyState() {
-        tvEmptyMessage.setVisibility(View.GONE);
-        btnShow.setVisibility(View.VISIBLE);
-    }
-
-    private void showNextPage() {
-        //int last = pager.getChildCount() + 1;
+    @Override
+    public void onRequestNextPage() {
         int lastIndex = adapter.getCount() - 1;
         int nexIndex = pager.getCurrentItem() + 1;
         Log.i(TAG, "next: " + nexIndex + " last: " + lastIndex);
         if (nexIndex <= lastIndex) {
             pager.setCurrentItem(nexIndex);
-            actionButtons.setVisibility(View.GONE);
-            btnShow.setVisibility(View.VISIBLE);
         } else {
-            actionButtons.setVisibility(View.GONE);
-            btnShow.setVisibility(View.GONE);
-            adapter.clearData();
-            //showEmptyState();
             recreate();
         }
     }

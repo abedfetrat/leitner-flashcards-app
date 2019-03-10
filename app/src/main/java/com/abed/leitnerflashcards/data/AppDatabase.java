@@ -7,7 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 @Database(entities = {Card.class}, version = 1)
-@TypeConverters({LocalDateConverter.class})
+@TypeConverters({CalendarConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CardDao cardDao();
 
