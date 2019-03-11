@@ -16,6 +16,6 @@ public class CalendarConverter {
 
     @TypeConverter
     public long toTimeStamp(Calendar cal) {
-        return cal.getTimeInMillis();
+        return cal == null ? 0 : cal.getTimeInMillis();
     }
 }

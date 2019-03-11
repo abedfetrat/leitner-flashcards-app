@@ -15,7 +15,7 @@ public class Card {
     private static final int LEVEL_2 = 2;
     private static final int LEVEL_3 = 3;
     private static final int LEVEL_4 = 4;
-    private static final int LEVEL_5 = 5;
+    public static final int LEVEL_MAX = 5;
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -120,7 +120,7 @@ public class Card {
     }
 
     public void levelUp() {
-        if (level < LEVEL_5) {
+        if (level < LEVEL_MAX) {
             level++;
             updateDueDate();
         }
@@ -150,7 +150,7 @@ public class Card {
             case LEVEL_4:
                 dueDate = DateUtil.getCalendarPlusDays(8);
                 break;
-            case LEVEL_5:
+            case LEVEL_MAX:
                 dueDate = null;
                 break;
         }

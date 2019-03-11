@@ -16,8 +16,8 @@ public interface CardDao {
     @Query("SELECT * FROM cards ORDER BY level ASC")
     public List<Card> getAll();
 
-    @Query("SELECT * FROM cards WHERE CAST(dueDate as date) <= CAST(:nowDate as date) ORDER BY level DESC")
-    public List<Card> getDue(Calendar nowDate);
+    @Query("SELECT * FROM cards WHERE CAST(dueDate as date) <= CAST(:nowDate as date) AND level != :cardMaxLevel ORDER BY level DESC")
+    public List<Card> getDue(Calendar nowDate, int cardMaxLevel);
 
     @Insert
     public void insert(Card card);

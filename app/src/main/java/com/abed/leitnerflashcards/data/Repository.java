@@ -85,7 +85,7 @@ public class Repository {
 
         @Override
         protected List<Card> doInBackground(Calendar... nowDate) {
-            return dao.getDue(nowDate[0]);
+            return dao.getDue(nowDate[0], Card.LEVEL_MAX);
         }
 
         @Override
