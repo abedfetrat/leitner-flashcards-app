@@ -3,16 +3,14 @@ package com.abed.leitnerflashcards.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.abed.leitnerflashcards.R;
 import com.abed.leitnerflashcards.data.Card;
-import com.abed.leitnerflashcards.data.DateUtil;
+import com.abed.leitnerflashcards.utils.DateUtil;
 import com.abed.leitnerflashcards.data.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnRequestNextPageListener {
@@ -54,29 +52,24 @@ public class MainActivity extends AppCompatActivity implements OnRequestNextPage
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Todo: Remove asynctask listener
-    }
-
     private void getDueCards() {
         Repository.getInstance(getApplication()).getDueCards(DateUtil.getCalendarWithoutTime()).addOnSuccessListener((List<Card> cards) -> {
-            if (cards != null && !cards.isEmpty()) {
+            if (!cards.isEmpty())
                 adapter.setCards(cards);
-            }
-        });
+        }); /*Consider removing success listener on activity onDestroy to prevent leaks.
+        Leaks might happen if activity is destroyed before asyntask is completed. Because asynctask will have reference to this activity
+         it will not be garbage collected. */
     }
 
     @Override
     public void onRequestNextPage() {
         int lastIndex = adapter.getCount() - 1;
         int nexIndex = pager.getCurrentItem() + 1;
-        Log.i(TAG, "next: " + nexIndex + " last: " + lastIndex);
+
         if (nexIndex <= lastIndex) {
             pager.setCurrentItem(nexIndex);
         } else {
-            recreate();
+            recreate(); // Recreates the activity Todo: find better way to display level 1 cards again when on last page.
         }
     }
 }

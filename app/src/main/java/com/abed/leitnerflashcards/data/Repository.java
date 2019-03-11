@@ -66,7 +66,7 @@ public class Repository {
         @Override
         protected void onPostExecute(List<Card> cards) {
             super.onPostExecute(cards);
-            if (listener != null)
+            if (cards != null && listener != null)
                 listener.onSuccess(cards);
         }
 
@@ -91,7 +91,7 @@ public class Repository {
         @Override
         protected void onPostExecute(List<Card> cards) {
             super.onPostExecute(cards);
-            if (listener != null)
+            if (cards != null && listener != null)
                 listener.onSuccess(cards);
         }
 

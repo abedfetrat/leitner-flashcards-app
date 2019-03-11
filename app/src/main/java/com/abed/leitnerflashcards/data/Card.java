@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.abed.leitnerflashcards.utils.DateUtil;
+
 import java.util.Calendar;
 
 @Entity(tableName = "cards")
@@ -17,7 +19,7 @@ public class Card {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int level;
-    private Calendar dueDate; // Todo: Use something else than LocalDate
+    private Calendar dueDate;
     private String imageFilePath;
     private String frontText;
     private String frontAudiFilePath;

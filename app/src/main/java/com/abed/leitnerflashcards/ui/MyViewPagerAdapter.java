@@ -113,7 +113,7 @@ public class MyViewPagerAdapter extends PagerAdapter {
         return cards.size();
     }
 
-    // Needed to clear all items when notifydatasetchanged is called
+    // Needed to clear all adapter items when notifydatasetchanged is called
     @Override
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
