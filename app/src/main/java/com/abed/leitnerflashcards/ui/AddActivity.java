@@ -10,11 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import com.abed.leitnerflashcards.R;
 import com.abed.leitnerflashcards.data.Card;
 import com.abed.leitnerflashcards.data.Repository;
 import com.abed.leitnerflashcards.ui.MainActivity;
+import com.abed.leitnerflashcards.utils.DateUtil;
+
+import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -26,6 +30,7 @@ public class AddActivity extends AppCompatActivity {
     private String pickedFrontAudioUri;
     private String pickedBackAudioUri;
 
+    private RadioGroup radioGroup;
     private EditText etFrontText;
     private EditText etBackText;
 
@@ -34,6 +39,7 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
+        radioGroup = findViewById(R.id.rg);
         Button btnPickImage = findViewById(R.id.btnImage);
         etFrontText = findViewById(R.id.etText1);
         Button btnPickFrontAudio = findViewById(R.id.btnAudio1);
@@ -116,7 +122,14 @@ public class AddActivity extends AppCompatActivity {
         // create card object
         String frontText = etFrontText.getText().toString();
         String backText = etBackText.getText().toString();
-        Card card = new Card(imageFilePath, frontText, frontAudioFilePath, backText, backAudioFilePath);
+
+        Calendar dueDate;
+        if (radioGroup.getCheckedRadioButtonId() == R.id.rb_today)
+            dueDate = DateUtil.getCalendarWithoutTime();
+        else
+            dueDate = DateUtil.getCalendarPlusDays(1);
+
+        Card card = new Card(dueDate, imageFilePath, frontText, frontAudioFilePath, backText, backAudioFilePath);
 
         // save card to database
         Repository.getInstance(getApplication()).insertCard(card);

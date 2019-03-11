@@ -28,10 +28,9 @@ public class Card {
     private String backAudioFilePath;
 
     @Ignore
-    public Card(String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
+    public Card(Calendar dueDate, String imageFilePath, String frontText, String frontAudiFilePath, String backText, String backAudioFilePath) {
         level = 1;
-        dueDate = DateUtil.getCalendarWithoutTime();
-
+        this.dueDate = dueDate;
         this.imageFilePath = imageFilePath;
         this.frontText = frontText;
         this.frontAudiFilePath = frontAudiFilePath;

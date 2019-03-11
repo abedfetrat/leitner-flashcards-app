@@ -18,4 +18,6 @@
     <string name="view_pager_empty_message">You don\'t have any cards due</string>
     <string name="level">Level</string>
     <string name="due_date">Due date</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>
