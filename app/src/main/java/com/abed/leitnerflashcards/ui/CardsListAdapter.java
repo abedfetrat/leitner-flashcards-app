@@ -35,7 +35,7 @@ public class CardsListAdapter extends RecyclerView.Adapter<CardsListAdapter.View
             tvDueDate = itemView.findViewById(R.id.tvDueDate);
             btnDelete = itemView.findViewById(R.id.btnDelete);
             btnDelete.setOnClickListener((View v) -> {
-                int pos = (int) itemView.getTag();
+                int pos = getAdapterPosition();
                 Repository.getInstance(context.getApplicationContext()).deleteCard(cards.get(pos));
                 cards.remove(pos);
                 notifyDataSetChanged();
@@ -53,7 +53,6 @@ public class CardsListAdapter extends RecyclerView.Adapter<CardsListAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.card_list_item, parent, false);
-        itemView.setTag(position);
         return new ViewHolder(itemView);
     }
 
