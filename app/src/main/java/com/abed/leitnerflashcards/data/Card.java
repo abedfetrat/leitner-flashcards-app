@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.abed.leitnerflashcards.utils.DateUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 @Entity(tableName = "cards")
@@ -111,6 +112,11 @@ public class Card {
 
     public void setBackAudioFilePath(String backAudioFilePath) {
         this.backAudioFilePath = backAudioFilePath;
+    }
+
+    public String getDueDateInString() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(dueDate.getTime());
     }
 
     public void levelUp() {

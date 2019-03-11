@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface CardDao {
 
-    @Query("SELECT * FROM cards ORDER BY id DESC")
+    @Query("SELECT * FROM cards ORDER BY level ASC")
     public List<Card> getAll();
 
     @Query("SELECT * FROM cards WHERE CAST(dueDate as date) <= CAST(:nowDate as date) ORDER BY level DESC")

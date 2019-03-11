@@ -16,7 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AddActivity" android:label="@string/title_activity_add"></activity>
+        <activity
+            android:name=".ui.AddActivity"
+            android:label="@string/title_activity_add" />
+        <activity android:name=".ui.ManageActivity" android:label="@string/title_activity_manage"></activity>
     </application>
 
 </manifest>

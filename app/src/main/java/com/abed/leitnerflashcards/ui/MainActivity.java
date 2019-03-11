@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnRequestNextPage
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle(R.string.title_activity_main);
 
         pager = findViewById(R.id.viewPager);
         adapter = new MyViewPagerAdapter(this);
@@ -42,23 +43,17 @@ public class MainActivity extends AppCompatActivity implements OnRequestNextPage
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add:
-                startActivity(new Intent(this, AddActivity.class));
-                break;
-            case R.id.delete:
-                break;
+        if (item.getItemId() == R.id.manage) {
+            startActivity(new Intent(this, ManageActivity.class));
         }
         return true;
     }
 
     private void getDueCards() {
-        Repository.getInstance(getApplication()).getDueCards(DateUtil.getCalendarWithoutTime()).addOnSuccessListener((List<Card> cards) -> {
-            if (!cards.isEmpty())
-                adapter.setCards(cards);
-        }); /*Consider removing success listener on activity onDestroy to prevent leaks.
+        Repository.getInstance(getApplication()).getDueCards(DateUtil.getCalendarWithoutTime()).addOnSuccessListener(adapter::setCards);
+        /*Consider removing success listener on activity onDestroy to prevent leaks.
         Leaks might happen if activity is destroyed before asyntask is completed. Because asynctask will have reference to this activity
-         it will not be garbage collected. */
+        it will not be garbage collected. */
     }
 
     @Override
