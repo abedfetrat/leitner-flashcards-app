@@ -2,6 +2,8 @@ package com.abed.leitnerflashcards.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.constraint.Group;
 import android.support.v4.view.PagerAdapter;
@@ -9,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.abed.leitnerflashcards.R;
 import com.abed.leitnerflashcards.data.Card;
+import com.abed.leitnerflashcards.data.FileManager;
 import com.abed.leitnerflashcards.data.Repository;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,13 +52,15 @@ public class MyViewPagerAdapter extends PagerAdapter {
 
         Card card = cards.get(position);
 
-        /*
-        if (card.getImagePath != null) {
-            ImageView imv = layout.findViewById(R.id.imageView);
-            imv.setVisibility(View.VISIBLE);
+        ImageView imv = layout.findViewById(R.id.imageView);
+        if (card.getImageFilePath() != null) {
             // Get and set image
+            FileManager.getInstance(context).getFile(card.getImageFilePath()).addOnSuccessListener((File file) -> {
+                Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imv.setVisibility(View.VISIBLE);
+                imv.setImageBitmap(bm);
+            });
         }
-        */
 
         TextView tvFrontText = layout.findViewById(R.id.tvFrontText);
         tvFrontText.setText(card.getFrontText());

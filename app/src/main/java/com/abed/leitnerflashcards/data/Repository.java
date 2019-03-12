@@ -100,8 +100,4 @@ public class Repository {
         }
 
     }
-
-    public interface OnSuccessListener<T> {
-        void onSuccess(T t);
-    }
 }

@@ -1,6 +1,7 @@
 package com.abed.leitnerflashcards.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +15,12 @@ import android.widget.RadioGroup;
 
 import com.abed.leitnerflashcards.R;
 import com.abed.leitnerflashcards.data.Card;
+import com.abed.leitnerflashcards.data.FileManager;
 import com.abed.leitnerflashcards.data.Repository;
 import com.abed.leitnerflashcards.ui.MainActivity;
 import com.abed.leitnerflashcards.utils.DateUtil;
 
+import java.io.InputStream;
 import java.util.Calendar;
 
 public class AddActivity extends AppCompatActivity {
@@ -26,9 +29,9 @@ public class AddActivity extends AppCompatActivity {
     private static final int PICK_FRONT_AUDIO = 1;
     private static final int PICK_BACK_AUDIO = 2;
 
-    private String pickedImageUri;
-    private String pickedFrontAudioUri;
-    private String pickedBackAudioUri;
+    private Uri pickedImageUri;
+    private Uri pickedFrontAudioUri;
+    private Uri pickedBackAudioUri;
 
     private RadioGroup radioGroup;
     private EditText etFrontText;
@@ -77,18 +80,20 @@ public class AddActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data != null) {
-            switch (requestCode) {
-                case PICK_IMAGE:
-                    pickedImageUri = data.getDataString();
-                    break;
-                case PICK_FRONT_AUDIO:
-                    pickedFrontAudioUri = data.getDataString();
-                    break;
-                case PICK_BACK_AUDIO:
-                    pickedBackAudioUri = data.getDataString();
-                    break;
+            Uri uri = data.getData();
+            if (uri != null) {
+                switch (requestCode) {
+                    case PICK_IMAGE:
+                        pickedImageUri = uri;
+                        break;
+                    case PICK_FRONT_AUDIO:
+                        pickedFrontAudioUri = uri;
+                        break;
+                    case PICK_BACK_AUDIO:
+                        pickedBackAudioUri = uri;
+                        break;
+                }
             }
-            Log.i(TAG, "picked content: " + data.getDataString());
         }
     }
 
@@ -105,18 +110,15 @@ public class AddActivity extends AppCompatActivity {
         String backAudioFilePath = null;
 
         if (pickedImageUri != null) {
-            // save picked image to storage
-            // set imageFilePath
+            imageFilePath = FileManager.getInstance(this).saveFile(getContentResolver(), pickedImageUri);
         }
 
         if (pickedFrontAudioUri != null) {
-            // save audio to storage
-            // set frontAudioFilePath
+            frontAudioFilePath = FileManager.getInstance(this).saveFile(getContentResolver(), pickedFrontAudioUri);
         }
 
         if (pickedBackAudioUri != null) {
-            // save audio to storage
-            // set backAudioFilePath
+            backAudioFilePath = FileManager.getInstance(this).saveFile(getContentResolver(), pickedBackAudioUri);
         }
 
         // create card object
