@@ -28,25 +28,34 @@ import java.util.List;
 public class MyViewPagerAdapter extends PagerAdapter {
     private static final String TAG = MyViewPagerAdapter.class.getSimpleName();
     private OnRequestNextPageListener onRequestNextPageListener;
+    private OnStartMediaPlayerListener onStartMediaPlayerListener;
     private Context context;
     private List<Card> cards;
 
-    private MediaPlayer mediaPlayer1;
-    private MediaPlayer mediaPlayer2;
-
-    public MyViewPagerAdapter(Context context) {
+    MyViewPagerAdapter(Context context) {
         this.context = context;
         cards = new ArrayList<>();
 
+        setOnRequestNextPageListener();
+        setOnStartMediaPlayerListener();
+    }
+
+    private void setOnRequestNextPageListener() {
         try {
             onRequestNextPageListener = (OnRequestNextPageListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(((Activity) context).getLocalClassName()
                     + " must implement OnRequestNextPageListener");
         }
+    }
 
-        mediaPlayer1 = new MediaPlayer();
-        mediaPlayer2 = new MediaPlayer();
+    private void setOnStartMediaPlayerListener() {
+        try {
+            onStartMediaPlayerListener = (OnStartMediaPlayerListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(((Activity) context).getLocalClassName()
+                    + " must implement OnStartMediaPlayerListener");
+        }
     }
 
     @NonNull
@@ -70,27 +79,23 @@ public class MyViewPagerAdapter extends PagerAdapter {
                 imv.setImageBitmap(bm);
             });
         }
-        // Get audio and prepare media player
-        if (card.getFrontAudiFilePath() != null) {
-            FileManager.getInstance(context).getFile(card.getFrontAudiFilePath()).addOnSuccessListener(this::prepareMediaPlayer1);
-        }
-
-        if (card.getBackAudioFilePath() != null) {
-            FileManager.getInstance(context).getFile(card.getBackAudioFilePath()).addOnSuccessListener(this::prepareMediaPlayer2);
-        }
 
         TextView tvFrontText = layout.findViewById(R.id.tvFrontText);
         tvFrontText.setText(card.getFrontText());
         tvFrontText.setOnClickListener((View v) -> {
             // play audio
-            mediaPlayer1.start();
+            String src = card.getFrontAudiFilePath();
+            if (src != null)
+                onStartMediaPlayerListener.onStartMediaPlayer(src);
         });
 
         TextView tvBackText = layout.findViewById(R.id.tvBackText);
         tvBackText.setText(card.getBackText());
         tvBackText.setOnClickListener((View v) -> {
             // play audio
-            mediaPlayer2.start();
+            String src = card.getBackAudioFilePath();
+            if (src != null)
+                onStartMediaPlayerListener.onStartMediaPlayer(src);
         });
 
         Group actionButtons = layout.findViewById(R.id.actionButtons);
@@ -149,23 +154,5 @@ public class MyViewPagerAdapter extends PagerAdapter {
         this.cards.clear();
         this.cards.addAll(cards);
         notifyDataSetChanged();
-    }
-
-    private void prepareMediaPlayer1(File file) {
-        try {
-            mediaPlayer1.setDataSource(file.getPath());
-            mediaPlayer1.prepare();
-        } catch (Exception e) {
-            Log.i(TAG, "" + e.getMessage());
-        }
-    }
-
-    private void prepareMediaPlayer2(File file) {
-        try {
-            mediaPlayer2.setDataSource(file.getPath());
-            mediaPlayer2.prepare();
-        } catch (Exception e) {
-            Log.i(TAG, "" + e.getMessage());
-        }
     }
 }

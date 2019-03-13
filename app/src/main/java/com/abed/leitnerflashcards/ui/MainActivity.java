@@ -1,8 +1,10 @@
 package com.abed.leitnerflashcards.ui;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,10 +15,12 @@ import com.abed.leitnerflashcards.data.Repository;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnRequestNextPageListener {
+public class MainActivity extends AppCompatActivity implements OnRequestNextPageListener, OnStartMediaPlayerListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private MyViewPagerAdapter adapter;
     private NonSwipeableViewPager pager;
+
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,15 @@ public class MainActivity extends AppCompatActivity implements OnRequestNextPage
         return true;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
     private void getDueCards() {
         Repository.getInstance(getApplication()).getDueCards(DateUtil.getCalendarWithoutTime()).addOnSuccessListener(adapter::setCards);
         /*Consider removing success listener on activity onDestroy to prevent leaks.
@@ -65,6 +78,20 @@ public class MainActivity extends AppCompatActivity implements OnRequestNextPage
             pager.setCurrentItem(nexIndex);
         } else {
             recreate(); // Recreates the activity Todo: find better way to display level 1 cards again when on last page.
+        }
+    }
+
+    @Override
+    public void onStartMediaPlayer(String src) {
+        if (mediaPlayer == null)
+            mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(src);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (Exception e) {
+            Log.i(TAG, "" + e.getMessage());
         }
     }
 }
