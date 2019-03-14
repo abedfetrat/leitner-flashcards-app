@@ -100,7 +100,7 @@ public class AddActivity extends AppCompatActivity {
     private void openPicker(String type, String title, int reqCode) {
         Intent intent = new Intent();
         intent.setType(type);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, title), reqCode);
     }
 
